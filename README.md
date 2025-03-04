@@ -1,1 +1,2 @@
-# CalendarRepo
+# CalendarApplication
+Calendar Application

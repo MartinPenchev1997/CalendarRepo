@@ -1,0 +1,168 @@
+<!-- <div class="report-container">
+  <h2>Report Mensile</h2>
+  <table mat-table [dataSource]="reports" multiTemplateDataRows class="mat-elevation-z8">
+    <ng-container matColumnDef="month">
+      <th mat-header-cell *matHeaderCellDef>Mese</th>
+      <td mat-cell *matCellDef="let report"> {{ report.month }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalHours">
+      <th mat-header-cell *matHeaderCellDef>Totale Ore</th>
+      <td mat-cell *matCellDef="let report"> {{ report.totalHours }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalMaintenance">
+      <th mat-header-cell *matHeaderCellDef>Totale Manutenzione</th>
+      <td mat-cell *matCellDef="let report"> {{ report.totalMaintenance }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="eventsCount">
+      <th mat-header-cell *matHeaderCellDef># Commesse</th>
+      <td mat-cell *matCellDef="let report"> {{ report.eventsCount }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="detail">
+      <td mat-cell *matCellDef="let report" [attr.colspan]="displayedColumns.length">
+        <div class="detail-container" [@detailExpand]="report === expandedElement ? 'expanded' : 'collapsed'">
+          <table mat-table [dataSource]="report.details" class="inner-table">
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef>Commesse</th>
+              <td mat-cell *matCellDef="let d"> {{ d.title }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="totalHours">
+              <th mat-header-cell *matHeaderCellDef>Ore</th>
+              <td mat-cell *matCellDef="let d"> {{ d.totalHours }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="totalMaintenance">
+              <th mat-header-cell *matHeaderCellDef>Manutenzione</th>
+              <td mat-cell *matCellDef="let d"> {{ d.totalMaintenance }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="eventsCount">
+              <th mat-header-cell *matHeaderCellDef>#</th>
+              <td mat-cell *matCellDef="let d"> {{ d.eventsCount }} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['title','totalHours','totalMaintenance','eventsCount']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['title','totalHours','totalMaintenance','eventsCount']"></tr>
+          </table>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let report; columns: displayedColumns;" class="element-row"
+      (click)="expandedElement = expandedElement === report ? null : report">
+    </tr>
+    <tr mat-row *matRowDef="let report; columns: ['detail']" class="detail-row"></tr>
+  </table>
+</div> -->
+
+
+<div class="report-container">
+  <h2>Report Mensile</h2>
+  <table mat-table [dataSource]="reports" multiTemplateDataRows class="mat-elevation-z8">
+    <!-- Colonna Mese -->
+    <ng-container matColumnDef="month">
+      <th mat-header-cell *matHeaderCellDef>Mese</th>
+      <td mat-cell *matCellDef="let report"> {{ report.month }} </td>
+    </ng-container>
+
+    <!-- Colonna Totale Ore -->
+    <ng-container matColumnDef="totalHours">
+      <th mat-header-cell *matHeaderCellDef>Totale Ore</th>
+      <td mat-cell *matCellDef="let report"> {{ report.totalHours }} </td>
+    </ng-container>
+
+    <!-- Colonna Totale Manutenzione -->
+    <ng-container matColumnDef="totalMaintenance">
+      <th mat-header-cell *matHeaderCellDef>Totale Manutenzione</th>
+      <td mat-cell *matCellDef="let report"> {{ report.totalMaintenance }} </td>
+    </ng-container>
+
+    <!-- Colonna Numero Commesse -->
+    <ng-container matColumnDef="eventsCount">
+      <th mat-header-cell *matHeaderCellDef># Commesse</th>
+      <td mat-cell *matCellDef="let report"> {{ report.eventsCount }} </td>
+    </ng-container>
+
+    <!-- Colonna per la riga espandibile "detail" del mese -->
+    <ng-container matColumnDef="detail">
+      <td mat-cell *matCellDef="let report" [attr.colspan]="displayedColumns.length">
+        <div class="detail-container" [@detailExpand]="report === expandedElement ? 'expanded' : 'collapsed'">
+          <!-- Tabella interna per il raggruppamento per commessa (livello 2) -->
+          <table mat-table [dataSource]="report.details" multiTemplateDataRows class="inner-table">
+            <!-- Colonna Titolo commessa -->
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef>Commesse</th>
+              <td mat-cell *matCellDef="let d"> {{ d.title }} </td>
+            </ng-container>
+            <!-- Colonna Totale Ore -->
+            <ng-container matColumnDef="totalHours">
+              <th mat-header-cell *matHeaderCellDef>Ore</th>
+              <td mat-cell *matCellDef="let d"> {{ d.totalHours }} </td>
+            </ng-container>
+            <!-- Colonna Totale Manutenzione -->
+            <ng-container matColumnDef="totalMaintenance">
+              <th mat-header-cell *matHeaderCellDef>Manutenzione</th>
+              <td mat-cell *matCellDef="let d"> {{ d.totalMaintenance }} </td>
+            </ng-container>
+            <!-- Colonna Conteggio -->
+            <ng-container matColumnDef="eventsCount">
+              <th mat-header-cell *matHeaderCellDef>#</th>
+              <td mat-cell *matCellDef="let d"> {{ d.eventsCount }} </td>
+            </ng-container>
+            <!-- Colonna per la riga espandibile "commessaDetail" -->
+            <ng-container matColumnDef="commessaDetail">
+              <td mat-cell *matCellDef="let d" [attr.colspan]="displayedColumnsInner.length">
+                <div class="commessa-detail-container" [@detailExpand]="d === expandedCommessa ? 'expanded' : 'collapsed'">
+                  <!-- Tabella più interna per i dettagli degli eventi (livello 3) -->
+                  <table mat-table [dataSource]="d.records" class="innermost-table">
+                    <!-- Colonna Data -->
+                    <ng-container matColumnDef="date">
+                      <th mat-header-cell *matHeaderCellDef>Data</th>
+                      <td mat-cell *matCellDef="let r"> {{ r.date | date:'dd/MM/yyyy' }} </td>
+                    </ng-container>
+                    <!-- Colonna Ore -->
+                    <ng-container matColumnDef="hours">
+                      <th mat-header-cell *matHeaderCellDef>Ore</th>
+                      <td mat-cell *matCellDef="let r"> {{ r.hours }} </td>
+                    </ng-container>
+                    <!-- Colonna Manutenzione -->
+                    <ng-container matColumnDef="maintenanceHours">
+                      <th mat-header-cell *matHeaderCellDef>Manutenzione</th>
+                      <td mat-cell *matCellDef="let r"> {{ r.maintenanceHours }} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="['date','hours','maintenanceHours']"></tr>
+                    <tr mat-row *matRowDef="let row; columns: ['date','hours','maintenanceHours']"></tr>
+                  </table>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Riga header per la tabella interna (livello 2) -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsInner"></tr>
+            <!-- Riga dati per la tabella interna (livello 2), cliccabile per espandere i dettagli -->
+            <tr mat-row *matRowDef="let d; columns: displayedColumnsInner;"
+                class="element-row"
+                (click)="expandedCommessa = expandedCommessa === d ? null : d">
+            </tr>
+            <!-- Riga dettaglio espandibile per la commessa (livello 3) -->
+            <tr mat-row *matRowDef="let d; columns: ['commessaDetail']" class="inner-detail-row"></tr>
+          </table>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Riga header per la tabella principale (livello 1) -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <!-- Riga dati principale (livello 1), cliccabile per espandere il dettaglio del mese -->
+    <tr mat-row *matRowDef="let report; columns: displayedColumns;" class="element-row"
+        (click)="expandedElement = expandedElement === report ? null : report">
+    </tr>
+    <!-- Riga dettaglio espandibile (livello 1) -->
+    <tr mat-row *matRowDef="let report; columns: ['detail']" class="detail-row"></tr>
+  </table>
+</div>

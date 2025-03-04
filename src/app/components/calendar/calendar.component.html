@@ -1,0 +1,26 @@
+<div class="calendar-header">
+  <div class="center-buttons">
+    <button mat-button (click)="previousYear()">« Anno Precedente</button>
+    <button mat-button (click)="previousMonth()">‹ Mese Precedente</button>
+    <span class="calendar-title">{{ viewDate | date: 'MMMM yyyy' }}</span>
+    <button mat-button (click)="nextMonth()">Mese Successivo ›</button>
+    <button mat-button (click)="nextYear()">Anno Successivo »</button>
+  </div>
+  <button id="export" mat-button (click)="exportData()">Export</button>
+</div>
+
+<app-filter (filterChange)="applyFilter($event)"></app-filter>
+
+
+<mwl-calendar-month-view [viewDate]="viewDate" [events]="calendarEvents"
+  (eventClicked)="eventClicked($event)" (dayClicked)="dayClicked($event)">
+</mwl-calendar-month-view>
+
+<!-- <ng-template #customTemplate let-day="day">
+  <div class="custom-day" [class.highlighted]="day.isHighlighted" [class.today]="day.isToday">
+    <div class="day-number">{{ day.date | date: 'short' }}</div>
+    <div class="day-events" *ngIf="day.events.length > 0">
+      <div class="event" *ngFor="let event of day.events" [style.backgroundColor]="event.color.primary"></div>
+    </div>
+  </div>
+</ng-template> -->

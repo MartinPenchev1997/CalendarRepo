@@ -1,0 +1,33 @@
+<div class="dashboard-container">
+  <h1>Dashboard</h1>
+
+  <!-- Grafico 1: Totale Ore per Mese -->
+  <div class="chart-container">
+    <canvas baseChart
+            [datasets]="[{ data: chart1Data, label: 'Ore Totali' }]"
+            [labels]="chart1Labels"
+            [options]="chart1Options"
+            [type]="chart1Type">
+    </canvas>
+  </div>
+
+  <!-- Grafico 2: Totale Ore di Manutenzione per Commesse -->
+  <div class="chart-container">
+    <canvas baseChart
+            [datasets]="[{ data: chart2Data, label: 'Ore di Manutenzione' }]"
+            [labels]="chart2Labels"
+            [options]="chart2Options"
+            [type]="chart2Type">
+    </canvas>
+  </div>
+
+  <!-- Grafico 3: Report Annuale -->
+  <div class="chart-container">
+    <canvas baseChart
+            [datasets]="chart3Data"
+            [labels]="chart3Labels"
+            [options]="chart3Options"
+            [type]="chart3Type">
+    </canvas>
+  </div>
+</div>

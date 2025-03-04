@@ -1,0 +1,22 @@
+/* Stili per le righe principali e interne */
+.element-row {
+  cursor: pointer;
+}
+
+.detail-row,
+.inner-detail-row {
+  height: 0;
+}
+
+.detail-container, .commessa-detail-container {
+  overflow: hidden;
+  display: flex;
+  padding: 16px;
+  background: #f8f8f8;
+}
+
+.inner-table, .innermost-table {
+  width: 100%;
+}
+
+/* Puoi aggiungere ulteriori regole per margini, colori o bordi se necessario */

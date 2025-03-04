@@ -1,0 +1,43 @@
+.calendar-header {
+  display: flex;
+  align-items: center;
+  padding: 0 10px; /* opzionale, per aggiungere un po' di spazio */
+}
+
+.center-buttons {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* spazio tra i pulsanti centrali */
+}
+
+.calendar-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.cell-container {
+  min-height: 80px;
+  border: 1px solid #ddd;
+  padding: 5px;
+  position: relative;
+  background-color: #fff;
+}
+
+.cell-header {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.cell-events {
+  min-height: 50px;
+}
+
+.draggable-event {
+  background-color: #e3f2fd;
+  margin-bottom: 5px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  cursor: move;
+}

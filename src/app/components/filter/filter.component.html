@@ -1,0 +1,63 @@
+<form [formGroup]="filterForm" class="filter-form">
+  <mat-form-field appearance="fill">
+    <mat-label>Commessa</mat-label>
+    <input matInput formControlName="title" placeholder="Inserisci il titolo">
+  </mat-form-field>
+
+  <div class="hour-range">
+    <mat-form-field>
+      <input matInput type="number" placeholder="Dalle" formControlName="minHours">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="number" placeholder="Alle" formControlName="maxHours">
+    </mat-form-field>
+  </div>
+
+  <!-- <mat-form-field appearance="fill">
+    <mat-label>Manutenzione</mat-label>
+    <input matInput type="checkbox" formControlName="maintenanceHours">
+  </mat-form-field> -->
+
+  <section class="example-section">
+    <mat-checkbox class="example-margin" formControlName="maintenanceHours">Manutenzione</mat-checkbox>
+  </section>
+
+  <!-- Nuovi filtri -->
+  <!-- <mat-form-field>
+    <mat-label>Cliente</mat-label>
+    <mat-select formControlName="client">
+      <mat-option *ngFor="let client of ['Test','Tes1']" [value]="client">
+        {{ client }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Progetto</mat-label>
+    <mat-select formControlName="project">
+      <mat-option *ngFor="let project of  ['Test','Tes1']" [value]="project">
+        {{ project }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field> -->
+
+  <!-- <mat-selection-list formControlName="statuses">
+    <mat-list-option *ngFor="let status of statusOptions" [value]="status.value" checkboxPosition="before">
+      {{ status.label }}
+    </mat-list-option>
+  </mat-selection-list> -->
+<!--
+  <mat-form-field appearance="fill">
+    <mat-label>Data da</mat-label>
+    <input matInput [matDatepicker]="picker1" formControlName="startDate">
+    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+    <mat-datepicker #picker1></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Data a</mat-label>
+    <input matInput [matDatepicker]="picker2" formControlName="endDate">
+    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+    <mat-datepicker #picker2></mat-datepicker>
+  </mat-form-field> -->
+  <button mat-button type="button" (click)="resetFilters()">Reset</button>
+</form>
