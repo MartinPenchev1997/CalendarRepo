@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CalendarEvent } from 'angular-calendar';
 import { Commesse } from 'src/app/models/commessa.model';
@@ -8,12 +8,17 @@ import { FilterCriteria } from '../filter/filter.component';
 import { ExtendedCalendarEvent } from 'src/app/models/calendar-event.model';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
+// Import jsPDF e il plugin per creare tabelle
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { ReminderService } from 'src/app/services/reminder.service';
+
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
   viewDate: Date = new Date();
   calendarEvents: ExtendedCalendarEvent[] = [];
   // Conserva tutti gli eventi e quelli filtrati separatamente
@@ -22,11 +27,17 @@ export class CalendarComponent implements OnInit {
 
   constructor(
     private eventService: EventService,
+    private reminderService: ReminderService,
     public dialog: MatDialog
   ) { }
+  ngOnDestroy(): void {
+    // this.stopReminders();
+  }
 
   ngOnInit(): void {
     this.loadEvents();
+
+    // this.startReminders();
   }
 
   loadEvents(): void {
@@ -48,6 +59,17 @@ export class CalendarComponent implements OnInit {
     }));
 
     this.applyFilter({}); // inizialmente nessun filtro
+  }
+
+  // Metodi per attivare/disattivare i promemoria
+  startReminders(): void {
+    this.reminderService.startReminders();
+    // alert('Promemoria attivati!');
+  }
+
+  stopReminders(): void {
+    this.reminderService.stopReminders();
+    // alert('Promemoria disattivati!');
   }
 
   applyFilter(criteria: FilterCriteria): void {
@@ -225,5 +247,137 @@ export class CalendarComponent implements OnInit {
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
+  }
+
+  // Esporta i dati in formato CSV
+  exportCSV(): void {
+    const events: Commesse[] = this.eventService.getEvents();
+    let csvContent = "data:text/csv;charset=utf-8,";
+    // Intestazione delle colonne
+    csvContent += "ID,Data,Titolo,Ore,Manutenzione\n";
+    events.forEach(e => {
+      const dateStr = new Date(e.date).toLocaleDateString();
+      // Se il titolo contiene virgole, lo racchiudiamo fra virgolette
+      csvContent += `${e.id},${dateStr},"${e.title}",${e.hours},${e.maintenanceHours}\n`;
+    });
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "commesse.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // Esporta i dati in formato PDF
+  exportPDF(): void {
+    const events: Commesse[] = this.eventService.getEvents();
+    const doc = new jsPDF();
+
+    // Titolo del PDF
+    doc.setFontSize(18);
+    doc.text("Report Commesse", 14, 22);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+
+    // Preparazione della tabella: header e body
+    const head = [['ID', 'Data', 'Titolo', 'Ore', 'Manutenzione']];
+    const body: any = events.map(e => [
+      e.id,
+      new Date(e.date).toLocaleDateString(),
+      e.title,
+      e.hours,
+      e.maintenanceHours
+    ]);
+
+    // Usa la funzione autoTable passando l'istanza doc e le opzioni
+    autoTable(doc, {
+      head: head,
+      body: body,
+      startY: 30,
+      theme: 'grid'
+    });
+
+    doc.save("commesse.pdf");
+  }
+
+  // Metodo per attivare il file input nascosto
+  triggerFileInput(): void {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  // Metodo per leggere il file JSON e importare i dati
+  importJSON(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        try {
+          // Legge e parsifica il file JSON
+          const importedData = JSON.parse(e.target.result);
+          // Puoi decidere se sostituire i dati esistenti oppure unirli.
+          // In questo esempio sostituiamo i dati esistenti:
+          this.eventService.saveEvents(importedData);
+          // Ricarica gli eventi aggiornati
+          this.loadEvents();
+          alert("Dati importati correttamente!");
+        } catch (error) {
+          console.error("Errore durante l'importazione dei dati", error);
+          alert("Errore durante l'importazione. Controlla il formato del file.");
+        }
+      };
+      reader.readAsText(file);
+    }
+  }
+
+  // Metodo per modificare un evento
+  editEvent(event: any, data:any): void {
+    event.stopPropagation()
+    // Usa i dati originali dell'evento salvati in event.meta.original
+    const originalEvent = data;
+    const dialogRef = this.dialog.open(EventDialogComponent, {
+      width: '400px',
+      data: {
+        id: originalEvent.id,
+        date: new Date(originalEvent.start),
+        title: originalEvent.title,
+        hours: originalEvent.hours,
+        maintenanceHours: originalEvent.maintenanceHours,
+        start: originalEvent.minHours,
+        end: originalEvent.maxHours,
+        status: originalEvent.status,
+        client: originalEvent.client,
+        project: originalEvent.project
+      } as EventData
+    });
+
+    dialogRef.afterClosed().subscribe((result: EventData) => {
+      if (result) {
+        // const updatedEvent = {
+        //   // ...originalEvent,
+        //   date: result.date,
+        //   title: result.title,
+        //   hours: result.hours,
+        //   maintenanceHours: result.maintenanceHours,
+        //   minHours: result.start,
+        //   maxHours: result.end,
+        //   status: result.status
+        // };
+        this.eventService.updateEvent(result);
+        this.loadEvents();  // Ricarica gli eventi aggiornati
+      }
+    });
+  }
+
+  // Metodo per eliminare un evento
+  deleteEvent(event: any,data:any): void {
+    event.stopPropagation();
+    if (confirm(`Sei sicuro di voler eliminare la commessa "${data.title}"?`)) {
+      this.eventService.deleteEvent(data.id);
+      this.loadEvents();
+    }
   }
 }

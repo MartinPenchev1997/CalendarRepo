@@ -35,7 +35,7 @@ export class EventDialogComponent {
     this.eventForm = this.fb.group({
       title: [data.title, Validators.required],
       hours: [data.hours, [Validators.required, Validators.min(0)]],
-      maintenanceHours: [data.maintenanceHours, [Validators.required, Validators.min(0)]],
+      maintenanceHours: [data.maintenanceHours, []],
       start: [data.start, [Validators.required]],
       end: [data.end, [Validators.required]],
       client: [data.client, []],

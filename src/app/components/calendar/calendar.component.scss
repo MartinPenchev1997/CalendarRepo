@@ -1,7 +1,8 @@
 .calendar-header {
   display: flex;
   align-items: center;
-  padding: 0 10px; /* opzionale, per aggiungere un po' di spazio */
+  padding: 0 10px;
+  /* opzionale, per aggiungere un po' di spazio */
 }
 
 .center-buttons {
@@ -9,7 +10,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* spazio tra i pulsanti centrali */
+  gap: 10px;
+  /* spazio tra i pulsanti centrali */
+}
+
+.reminder-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+input#fileInput {
+  display: none;
 }
 
 .calendar-title {

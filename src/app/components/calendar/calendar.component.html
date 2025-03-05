@@ -6,21 +6,42 @@
     <button mat-button (click)="nextMonth()">Mese Successivo ›</button>
     <button mat-button (click)="nextYear()">Anno Successivo »</button>
   </div>
+  <div class="reminder-buttons">
+    <button mat-button color="primary" (click)="startReminders()">Attiva Promemoria</button>
+    <button mat-button color="warn" (click)="stopReminders()">Disattiva Promemoria</button>
+  </div>
   <button id="export" mat-button (click)="exportData()">Export</button>
+  <button mat-button color="primary" (click)="exportCSV()">Export CSV</button>
+  <button mat-button color="accent" (click)="exportPDF()">Export PDF</button>
+
+  <!-- Importazione: bottone per importare JSON -->
+  <button mat-button color="warn" (click)="triggerFileInput()">Import JSON</button>
+
+  <!-- File input nascosto -->
+  <input type="file" id="fileInput" accept=".json" (change)="importJSON($event)">
 </div>
 
 <app-filter (filterChange)="applyFilter($event)"></app-filter>
 
 
-<mwl-calendar-month-view [viewDate]="viewDate" [events]="calendarEvents"
-  (eventClicked)="eventClicked($event)" (dayClicked)="dayClicked($event)">
+<mwl-calendar-month-view [viewDate]="viewDate" [events]="calendarEvents" (eventClicked)="eventClicked($event)"
+  (dayClicked)="dayClicked($event)">
 </mwl-calendar-month-view>
 
-<!-- <ng-template #customTemplate let-day="day">
-  <div class="custom-day" [class.highlighted]="day.isHighlighted" [class.today]="day.isToday">
-    <div class="day-number">{{ day.date | date: 'short' }}</div>
-    <div class="day-events" *ngIf="day.events.length > 0">
-      <div class="event" *ngFor="let event of day.events" [style.backgroundColor]="event.color.primary"></div>
+<!-- <ng-template #customCellTemplate let-day="day">
+  <div class="cell-container" cdkDropList [cdkDropListData]="day ? day.events || [] : []"
+    (cdkDropListDropped)="drop($event, day)">
+    <div class="cell-header">{{ day ? day.date : '' | date:'d' }}</div>
+    <div class="cell-events">
+      <div *ngFor="let event of day ? day.events : []" cdkDrag [cdkDragData]="event" class="draggable-event">
+        <span class="event-title" (click)="editEvent($event, event)">
+          {{ event.title }}
+        </span>
+        <button mat-icon-button color="warn" class="delete-button"
+          (click)="deleteEvent($event,event)">
+          X
+        </button>
+      </div>
     </div>
   </div>
 </ng-template> -->
