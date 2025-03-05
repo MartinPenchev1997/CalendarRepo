@@ -259,11 +259,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
     const events: Commesse[] = this.eventService.getEvents();
     let csvContent = "data:text/csv;charset=utf-8,";
     // Intestazione delle colonne
-    csvContent += "ID,Data,Titolo,Ore,Manutenzione,Nota\n";
+    csvContent += "ID,Data,Titolo,Ore,Manutenzione,Status,Nota\n";
     events.forEach(e => {
       const dateStr = new Date(e.date).toLocaleDateString();
       // Se il titolo contiene virgole, lo racchiudiamo fra virgolette
-      csvContent += `${e.id},${dateStr},"${e.title}",${e.hours},${e.maintenanceHours},"${e.note || ''}"\n\n`;
+      csvContent += `${e.id},${dateStr},"${e.title}",${e.hours},${e.maintenanceHours},"${e.status || ''}","${e.note || ''}"\n`;
     });
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -286,13 +286,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
     doc.setTextColor(100);
 
     // Preparazione della tabella: header e body
-    const head = [['ID', 'Data', 'Titolo', 'Ore', 'Manutenzione', 'Nota']];
+    const head = [['ID', 'Data', 'Titolo', 'Ore', 'Manutenzione', 'Status', 'Nota']];
     const body: any = events.map(e => [
       e.id,
       new Date(e.date).toLocaleDateString(),
       e.title,
       e.hours,
       e.maintenanceHours,
+      e.status,
       e.note || ''
     ]);
 
