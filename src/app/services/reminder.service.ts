@@ -44,7 +44,7 @@ export class ReminderService {
   private checkReminders(): void {
     const events: Commesse[] = this.eventService.getEvents();
     const now = new Date();
-    // Impostiamo un intervallo di promemoria: eventi che iniziano entro i prossimi 15 minuti
+    // Impostiamo un intervallo di promemoria: eventi che iniziano entro i prossimi 1000 minuti
     const reminderLimit = new Date(now.getTime() + 1000 * 60000);
 
     events.forEach(e => {

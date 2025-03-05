@@ -14,6 +14,7 @@ export interface EventData {
   client?: string;
   project?: string;
   status: 'completed' | 'in-progress' | 'pending';
+  note?: string;
 }
 
 @Component({
@@ -41,6 +42,7 @@ export class EventDialogComponent {
       client: [data.client, []],
       project: [data.project, []],
       status: [data.status, [Validators.required]],
+      note: [data.note || '']
     });
   }
 

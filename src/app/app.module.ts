@@ -22,6 +22,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgChartsModule } from 'ng2-charts';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     MatTableModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatPaginatorModule,
     MatListModule,
     MatOptionModule,
     MatCheckboxModule,

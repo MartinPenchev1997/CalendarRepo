@@ -9,4 +9,5 @@ export interface Commesse {
   client?: string;
   project?: string;
   status: 'completed' | 'in-progress' | 'pending';
+  note?: string;
 }

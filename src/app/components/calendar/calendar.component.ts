@@ -47,14 +47,15 @@ export class CalendarComponent implements OnInit, OnDestroy {
       id: e.id,
       start: new Date(e.date),
       meta: { id: e.id, original: e },  // Conserva l'evento originale
-      title: `${e.title} (Ore: ${e.hours}, Manutenzione: ${e.maintenanceHours})`,
+      title: `${e.title} (Ore: ${e.hours}, Manutenzione: ${e.maintenanceHours}, Note: ${e.note || ''})`,
       client: e.client,
       project: e.project,
       status: e.status,
       hours: e.hours,
       minHours: e.start,
       maxHours: e.end,
-      maintenanceHours: e.maintenanceHours
+      maintenanceHours: e.maintenanceHours,
+      note: e.note
       // Altre proprietà opzionali di CalendarEvent...
     }));
 
@@ -115,7 +116,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.calendarEvents = filtered.map(e => ({
       id: e.id,
       start: new Date(e.date),
-      title: `${e.title} (Ore: ${e.hours}, Manutenzione: ${e.maintenanceHours})`,
+      title: `${e.title} (Ore: ${e.hours}, Manutenzione: ${e.maintenanceHours}, Note: ${e.note || ''})`,
       client: e.client,
       project: e.project,
       status: e.status,
@@ -139,7 +140,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
         maintenanceHours: false,
         start: 8,
         end: 17,
-        status: 'in-progress'
+        status: 'in-progress',
+        note: ''
       } as EventData
     });
 
@@ -156,7 +158,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
           project: result.project,
           title: result.title,
           hours: result.hours,
-          maintenanceHours: result.maintenanceHours
+          maintenanceHours: result.maintenanceHours,
+          note: result.note
         };
         this.eventService.addEvent(newEvent);
       }
@@ -179,7 +182,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
         start: storedEvent?.start,
         project: storedEvent?.project,
         client: storedEvent?.client,
-        status: storedEvent?.status
+        status: storedEvent?.status,
+        note: storedEvent?.note
       } as EventData
     });
 
@@ -196,7 +200,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
           end: result.end,
           status: result.status,
           client: result.client,
-          project: result.project
+          project: result.project,
+          note: result.note
         };
         this.eventService.updateEvent(newEvent);
       }
@@ -254,11 +259,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
     const events: Commesse[] = this.eventService.getEvents();
     let csvContent = "data:text/csv;charset=utf-8,";
     // Intestazione delle colonne
-    csvContent += "ID,Data,Titolo,Ore,Manutenzione\n";
+    csvContent += "ID,Data,Titolo,Ore,Manutenzione,Nota\n";
     events.forEach(e => {
       const dateStr = new Date(e.date).toLocaleDateString();
       // Se il titolo contiene virgole, lo racchiudiamo fra virgolette
-      csvContent += `${e.id},${dateStr},"${e.title}",${e.hours},${e.maintenanceHours}\n`;
+      csvContent += `${e.id},${dateStr},"${e.title}",${e.hours},${e.maintenanceHours},"${e.note || ''}"\n\n`;
     });
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -281,13 +286,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
     doc.setTextColor(100);
 
     // Preparazione della tabella: header e body
-    const head = [['ID', 'Data', 'Titolo', 'Ore', 'Manutenzione']];
+    const head = [['ID', 'Data', 'Titolo', 'Ore', 'Manutenzione', 'Nota']];
     const body: any = events.map(e => [
       e.id,
       new Date(e.date).toLocaleDateString(),
       e.title,
       e.hours,
-      e.maintenanceHours
+      e.maintenanceHours,
+      e.note || ''
     ]);
 
     // Usa la funzione autoTable passando l'istanza doc e le opzioni
@@ -335,7 +341,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   // Metodo per modificare un evento
   editEvent(event: any, data:any): void {
-    event.stopPropagation()
+    event.stopPropagation();
     // Usa i dati originali dell'evento salvati in event.meta.original
     const originalEvent = data;
     const dialogRef = this.dialog.open(EventDialogComponent, {
@@ -350,22 +356,24 @@ export class CalendarComponent implements OnInit, OnDestroy {
         end: originalEvent.maxHours,
         status: originalEvent.status,
         client: originalEvent.client,
-        project: originalEvent.project
+        project: originalEvent.project,
+         note: originalEvent.note || ''
       } as EventData
     });
 
     dialogRef.afterClosed().subscribe((result: EventData) => {
       if (result) {
-        // const updatedEvent = {
-        //   // ...originalEvent,
-        //   date: result.date,
-        //   title: result.title,
-        //   hours: result.hours,
-        //   maintenanceHours: result.maintenanceHours,
-        //   minHours: result.start,
-        //   maxHours: result.end,
-        //   status: result.status
-        // };
+        const updatedEvent = {
+          // ...originalEvent,
+          date: result.date,
+          title: result.title,
+          hours: result.hours,
+          maintenanceHours: result.maintenanceHours,
+          minHours: result.start,
+          maxHours: result.end,
+          status: result.status,
+          note: result.note
+        };
         this.eventService.updateEvent(result);
         this.loadEvents();  // Ricarica gli eventi aggiornati
       }
